@@ -9,19 +9,18 @@ class ToodledoTest extends PHPUnit_Framework_TestCase
     {
         
         //You can get the key and secret here: https://testingbot.com/members/user/edit
-        
         $key = '';
         $secret = '';
         
-        $testingBotApiUrl = 'http://{$key}:{$secret}@hub.testingbot.com/wd/hub';
+        $testingBotApiUrl = "http://{$key}:{$secret}@hub.testingbot.com/wd/hub";
         
-        $this->driver = new \Behat\Mink\Driver\Selenium2Driver('firefox',
-            array("platform"=>"WINDOWS", "browserName"=>"firefox", "name" => "BehatTest"), $testingBotApiUrl);
+        $this->driver = new \Behat\Mink\Driver\Selenium2Driver('chrome',
+            array("platform"=>"WINDOWS", "browserName"=>"chrome", "name" => "BehatTest"), $testingBotApiUrl);
         $this->session = new \Behat\Mink\Session($this->driver);
         $this->session->start();
     }
     
-    public function signupTest()
+    public function testSignup()
     {
         $this->session->visit("https://www.toodledo.com/signup.php");
         
@@ -36,13 +35,30 @@ class ToodledoTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->session->getPage()->hasContent('test.mts1617'));
     }
     
-    public function testAddClass()
+    public function testAdd()
     {
+        $this->session->visit("https://www.toodledo.com/signin.php");
+        $page = $this->session->getPage();
+        $page->fillField("email", "test.mts1617@bobmail.com");
+        $page->fillField("pass", "mts1617");
+        $page->find("css", "form")->submit();
+
+        $this->session->visit("https://www.toodledo.com/tasks/index.php");
+       
+        $this->session->getPage()->pressButton('nav_add');
         
+        $this->session->getPage()->fillField("title", "test-task");
+        
+        $this->session->getPage()->find('css', 'form#formAddTask')->submit();
+        
+        $this->session->visit("https://www.toodledo.com/tasks/index.php");
+        
+        $this->assertTrue($this->session->getPage()->hasContent('test-task'));
     }
     
     public function tearDown()
     {
+        $this->session->reset();
         $this->session->stop();
     }
     
