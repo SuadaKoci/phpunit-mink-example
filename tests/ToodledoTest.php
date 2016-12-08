@@ -9,8 +9,8 @@ class ToodledoTest extends PHPUnit_Framework_TestCase
     {
         
         //You can get the key and secret here: https://testingbot.com/members/user/edit
-        $key = '';
-        $secret = '';
+        $key = 'd84eb1e5b6afc9a0ec8d639f3bcebe73';
+        $secret = 'b8ac2d0e19547e3a9e10709033d32b66';
         
         $testingBotApiUrl = "http://{$key}:{$secret}@hub.testingbot.com/wd/hub";
         
